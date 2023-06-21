@@ -43,6 +43,6 @@ tolerations: []
 
 affinity: {}
 
-cfRelayUrl: "https://relay.commonfate.io"
+cfRelayUrl: "https://relay.commonfate.cloud"
 cfLog: "info"
 cfClusterName: ""
