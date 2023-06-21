@@ -1,6 +1,6 @@
 apiVersion: v2
 name: commonfate-worker
-description: A Helm chart for Kubernetes
+description: Access Control for Kubernetes using Common Fate Cloud.
 home: https://commonfate.io/
 icon: "https://img.shields.io/badge/slack-commonfate-1F72FE.svg?logo=slack"
 keywords:
