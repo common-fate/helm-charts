@@ -3,6 +3,21 @@ entries:
   commonfate-worker:
   - apiVersion: v2
     appVersion: 0.5.2
+    created: "2023-06-21T05:31:34.933274437Z"
+    description: Access Control for Kubernetes using Common Fate Cloud.
+    digest: 6c49627a5c9160e915c1bb177a7d4f0f1680cb8a38eabbebc82c950ed243bb32
+    home: https://commonfate.io/
+    icon: https://img.shields.io/badge/slack-commonfate-1F72FE.svg?logo=slack
+    keywords:
+    - commonfate
+    - commonfate-cloud
+    name: commonfate-worker
+    type: application
+    urls:
+    - https://github.com/common-fate/helm-charts/releases/download/commonfate-worker-0.1.3/commonfate-worker-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 0.5.2
     created: "2023-06-21T05:11:35.384182388Z"
     description: Access Control for Kubernetes using Common Fate Cloud.
     digest: 906b1196e63cee81af642c2f8c649ec5e15330d56ab03c4989339a61953d819d
@@ -46,4 +61,4 @@ entries:
     urls:
     - https://github.com/common-fate/helm-charts/releases/download/commonfate-worker-0.1.0/commonfate-worker-0.1.0.tgz
     version: 0.1.0
-generated: "2023-06-21T05:11:35.384193495Z"
+generated: "2023-06-21T05:31:34.933292637Z"
