@@ -49,8 +49,7 @@ spec:
           args: [
               "worker",
               "up",
-              "--k8s",
-              "--k8s-is-in-cluster",
+              "--k8s-runtime={{ .Values.cfK8Runtime }}"
               "--k8s-cluster-name={{ .Values.cfClusterName }}",
             ] # Set the command arguments if needed
       {{- with .Values.nodeSelector }}
