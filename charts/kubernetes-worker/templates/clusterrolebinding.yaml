@@ -3,8 +3,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: admin-cluster-role-binding
-  labels: 
-    {{- include "worker-helm.labels" . | nindent 4 }}
+  labels: {{- include "worker-helm.labels" . | nindent 4 }}
 subjects:
   - kind: User
     name: common-fate-admin
@@ -18,8 +17,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: readonly-cluster-role-binding
-  labels: 
-    {{- include "worker-helm.labels" . | nindent 4 }}
+  labels: {{- include "worker-helm.labels" . | nindent 4 }}
 subjects:
   - kind: User
     name: common-fate-readonly
