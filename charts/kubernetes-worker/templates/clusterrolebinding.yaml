@@ -9,7 +9,7 @@ subjects:
     name: common-fate-admin
 roleRef:
   kind: ClusterRole
-  name: cluster-admin
+  name: common-fate-admin-role
   apiGroup: rbac.authorization.k8s.io
 
 ---
@@ -23,5 +23,5 @@ subjects:
     name: common-fate-readonly
 roleRef:
   kind: ClusterRole
-  name: view
+  name: common-fate-readonly-role
   apiGroup: rbac.authorization.k8s.io
