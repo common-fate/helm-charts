@@ -2,8 +2,8 @@ Thank you for installing {{ .Chart.Name }}.
 
 Please wait a few seconds until it is fully installed. 
 
-After installation is complete, you need to provide worker token secret to the Common Fate Kubernetes Worker. 
-You can generate a worker token through the Common Fate Cloud Web Application. 
+Verify the worker is registered successfully:
 
-Once you have the worker token, run the following command: 
-kubectl create secret generic cf-worker --from-literal=worker-token='<your_worker_token_value>'
+`cf kube cluster list`
+
+You should see your cluster in the list now.
