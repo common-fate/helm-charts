@@ -46,4 +46,4 @@ affinity: {}
 
 cfRelayUrl: "https://relay.commonfate.cloud"
 cfLog: "info"
-cfDatabaseName: ""
+cfPostgresDSN: ""
