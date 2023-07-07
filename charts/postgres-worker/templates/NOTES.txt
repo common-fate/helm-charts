@@ -1,3 +1,0 @@
-Thank you for installing {{ .Chart.Name }}. 
-
-Please wait a few seconds until it is fully installed.

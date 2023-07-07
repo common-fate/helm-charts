@@ -11,11 +11,20 @@ helm repo add common-fate https://common-fate.github.io/helm-charts/
 
 You can then run `helm search common-fate` to see the charts.
 
-## Installation 
-You can install the Common Fate Kubernetes Worker using the following command:
+## Installation
+
+Common Fate Worker supports multiple protocol and it is essential to set correct argument when installing the helm chart. 
+
+1. To install the Common Fate Kubernetes Worker, use the following command:
 ```console
 helm install --set cfClusterName=<your_cluster_name> common-fate/commonfate-worker --generate-name
 ```
+
+2. To install the Common Fate Postgres Worker, use the following command:
+```console
+helm install --set cfPostgresDSN=<your_postgres_connection_string> common-fate/commonfate-worker --generate-name
+```
+
 
 After installation is complete, you need to provide worker token secret to the Common Fate Kubernetes Worker. 
 You can generate a worker token through the Common Fate Cloud Web Application. 
