@@ -1,4 +1,4 @@
-{{- if .Values.cfClusterName }}
+{{- if eq .Values.cfProtocol "kubernetes" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
