@@ -36,6 +36,26 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
+            {{- if eq .Values.cfProtocol "postgres"}}
+            - name: POSTGRES_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: cf-pgdb-dsn
+                  key: pgdb-dsn
+            {{- end}}
+
+            {{- if eq .Values.cfProtocol "kubernetes" }}
+              {{- if .Values.cfClusterName}}
+            - name: KUBERNETES_CLUSTER_NAME
+              value: {{ .Values.cfClusterName }}
+              {{- else }}
+                {{- include  "error" "You need to specify the cluster name by setting cfClusterName variable \n Try re-running 'helm install --set cfProtocol=kubernetes --set cfClusterName=<your_cluster_name> cf/commonfate-worker --generate-name"}}
+              {{- end}}
+
+            - name: KUBERNETES_RUNTIME
+              value: {{ .Values.cfK8Runtime }}
+            {{- end}}
+
             - name: WORKER_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -45,24 +65,18 @@ spec:
               value: {{ .Values.cfRelayUrl }}
             - name: CF_LOG
               value: {{ .Values.cfLog }}
-          command: ["cf"] # Set the desired entrypoint command
+          command: ["cf"] # Verify the cfProtocol value to determine which protocol should be loaded with worker up command.
           args: [ 
-              {{-  if not (or .Values.cfPostgresDSN .Values.cfClusterName)}}
-                {{- include  "error" "You need to either set cfPostgresDSN or cfClusterName variable. \n Try re-running the helm install command with correct argument. \n 1. For Kubernetes, run 'helm install --set cfClusterName=<your_cluster_name> cf/commonfate-worker --generate-name \n 2. For Postgres, run 'helm install --set cfPostgresDSN=<your_db_connection_string>' cf/commonfate-worker --generate-name"}}
+              {{-  if not .Values.cfProtocol}}
+                {{- include  "error" "You need to set value of cfProtocol to specify the desired worker protocol. \n Try re-running the helm install command with correct argument. \n 1. For Kubernetes, run 'helm install --set cfProtocol=kubernetes cf/commonfate-worker --generate-name \n 2. For Postgres, run 'helm install --set cfProtocol=postgres cf/commonfate-worker --generate-name"}}
               {{- end}} 
 
-              {{- if .Values.cfPostgresDSN }}    
-              "worker", 
-              "up",
-              "--pgdb-dsn={{ .Values.cfPostgresDSN}}"
-              {{- end}}
-
-              {{- if .Values.cfClusterName }}
-              "worker",
-              "up",
-              "--k8s-runtime={{ .Values.cfK8Runtime }}",
-              "--k8s-cluster-name={{ .Values.cfClusterName }}",
-              {{- end}}
+              {{-  if and (ne .Values.cfProtocol "kubernetes") (ne .Values.cfProtocol "postgres")}}
+                {{- include  "error" "Invalid protocol specified. \n Try re-running the helm install command with correct argument. \n 1. For Kubernetes, run 'helm install --set cfProtocol=kubernetes --set cfClusterName=<your_cluster_name> cf/commonfate-worker --generate-name \n 2. For Postgres, run 'helm install --set cfProtocol=postgres cf/commonfate-worker --generate-name"}}
+                {{- else }}
+                   "worker", 
+                   "up"
+              {{- end}} 
             ]
       {{- with .Values.nodeSelector }}
       nodeSelector:

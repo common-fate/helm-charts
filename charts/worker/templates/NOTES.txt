@@ -1,9 +1,9 @@
-Thank you for installing {{ .Chart.Name }}. 
+Thank you for installing {{ .Chart.Name }} with {{ .Values.cfProtocol }} protocol. 
 
 Please wait a few seconds until it is fully installed. 
 
 
-{{- if .Values.cfClusterName }}
+{{- if eq .Values.cfProtocol "kubernetes" }}
 
 Verify the worker is registered successfully:
 
@@ -13,7 +13,7 @@ You should see your cluster in the list now.
 
 {{- end }}
 
-{{- if .Values.cfPostgresDSN }}
+{{- if eq .Values.cfProtocol "postgres" }}
 
 Verify the worker is registered successfully by visiting your Common Fate Cloud web app. 
 Go to resources tab and see if your database is shown as online in "Postgres" tab.
