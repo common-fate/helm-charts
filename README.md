@@ -30,12 +30,12 @@ kubectl create secret generic cf-pgdb-dsn --from-literal=pgdb-dsn='your_postgres
 
 1. To install the Common Fate Kubernetes Worker, use the following command:
 ```console
-helm install --set cfProtocol=kubernetes --set cfClusterName=<your_cluster_name> common-fate/commonfate-worker --generate-name
+helm install --set 'cfProtocol={kubernetes}' --set cfClusterName=<your_cluster_name> common-fate/commonfate-worker --generate-name
 ```
 
 2. To install the Common Fate Postgres Worker, use the following command:
 ```console
-helm install --set cfProtocol=postgres --set cfPostgresDSN=<your_postgres_connection_string> common-fate/commonfate-worker --generate-name
+helm install --set c'fProtocol={postgres}' --set cfPostgresDSN=<your_postgres_connection_string> common-fate/commonfate-worker --generate-name
 ```
 
 
