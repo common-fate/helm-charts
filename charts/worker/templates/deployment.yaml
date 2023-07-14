@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "worker-helm.fullname" . }}
+  labels:
+    {{- include "worker-helm.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "worker-helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "worker-helm.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "worker-helm.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            {{- if has "postgres" .Values.cfProtocol}}
+            - name: POSTGRES_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: cf-pgdb-dsn
+                  key: pgdb-dsn
+            {{- end}}
+
+            {{- if has "kubernetes" .Values.cfProtocol }}
+              {{- if .Values.cfClusterName}}
+            - name: KUBERNETES_CLUSTER_NAME
+              value: {{ .Values.cfClusterName }}
+              {{- else }}
+                {{- include  "error" "You need to specify the cluster name by setting cfClusterName variable \n Try re-running 'helm install --set 'cfProtocol={kubernetes}' --set cfClusterName=<your_cluster_name> cf/commonfate-worker --generate-name"}}
+              {{- end}}
+
+            - name: KUBERNETES_RUNTIME
+              value: {{ .Values.cfK8Runtime }}
+            {{- end}}
+
+            - name: WORKER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: cf-worker
+                  key: worker-token
+            - name: CF_RELAY_URL
+              value: {{ .Values.cfRelayUrl }}
+            - name: CF_LOG
+              value: {{ .Values.cfLog }}
+          command: ["cf"] # Verify the cfProtocol value to determine which protocol should be loaded with worker up command.
+          args: [ 
+              {{-  if not .Values.cfProtocol}}
+                {{- include  "error" "You need to set value of cfProtocol to specify the desired worker protocol. \n Try re-running the helm install command with correct argument. \n 1. For Kubernetes, run 'helm install --set 'cfProtocol={kubernetes}' cf/commonfate-worker --generate-name \n 2. For Postgres, run 'helm install --set 'cfProtocol={postgres}' cf/commonfate-worker --generate-name"}}
+              {{- end}} 
+
+              {{-  if not (or (has "kubernetes" .Values.cfProtocol) (has "postgres" .Values.cfProtocol))}}
+                {{- include  "error" "Invalid protocol specified. \n Try re-running the helm install command with correct argument. \n 1. For Kubernetes, run 'helm install --set 'cfProtocol={kubernetes}' --set cfClusterName=<your_cluster_name> cf/commonfate-worker --generate-name \n 2. For Postgres, run 'helm install --set 'cfProtocol={postgres}' cf/commonfate-worker --generate-name"}}
+                {{- else }}
+                   "worker", 
+                   "up"
+              {{- end}} 
+            ]
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

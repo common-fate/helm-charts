@@ -1,9 +1,0 @@
-Thank you for installing {{ .Chart.Name }}. 
-
-Please wait a few seconds until it is fully installed. 
-
-Verify the worker is registered successfully:
-
-`cf kube cluster list`
-
-You should see your cluster in the list now.
