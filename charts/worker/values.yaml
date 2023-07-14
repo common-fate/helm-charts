@@ -47,4 +47,4 @@ cfRelayUrl: "https://relay.commonfate.cloud"
 cfLog: "info"
 cfClusterName: ""
 cfK8Runtime: "cluster"
-cfProtocol: ""
+cfProtocol: []
