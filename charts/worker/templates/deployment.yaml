@@ -37,7 +37,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           env:
             {{- if has "postgres" .Values.cfProtocol}}
-            - name: POSTGRES_DSN
+            - name: POSTGRES_CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
                   name: cf-pgdb-dsn
